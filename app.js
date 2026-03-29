@@ -479,5 +479,53 @@ function cancelRoadsideTest() {
   showRoadsideOpenTests();
 }
 
+// --- LOGIN SYSTEM ---
+
+let pendingRole = null; // Rolle, die der Spieler ausgewählt hat
+
+function loginAs(role) {
+  pendingRole = role;
+  showScreen("screen-auth");
+  document.getElementById("authUser").value = getRoleUsername(role);
+}
+
+function getRoleUsername(role) {
+  switch (role) {
+    case "court": return "Landesgericht Falkenheim";
+    case "clinic": return "RKF / Uniklinikum";
+    case "roadside": return "Pannendienst Falkenheim";
+    default: return "Unbekannt";
+  }
+}
+
+function submitLogin(event) {
+  event.preventDefault();
+
+  const password = document.getElementById("authPass").value;
+
+  if (password !== "Test1234") {
+    alert("Falsches Passwort!");
+    return;
+  }
+
+  state.currentRole = pendingRole;
+  setRoleLabel();
+
+  switch (pendingRole) {
+    case "court":
+      showScreen("screen-court-menu");
+      break;
+    case "clinic":
+      showScreen("screen-clinic-menu");
+      break;
+    case "roadside":
+      showScreen("screen-roadside-menu");
+      break;
+  }
+
+  pendingRole = null;
+}
+
+
 // Init
 showScreen('screen-login');
