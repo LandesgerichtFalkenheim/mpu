@@ -7,10 +7,13 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
   <div class="background-gradient"></div>
 
   <div class="app-frame">
     <div class="tablet">
+
+      <!-- HEADER -->
       <header class="tablet-header">
         <div class="header-top">
           <span class="header-pill">Falkenheim RP</span>
@@ -22,62 +25,92 @@
         </div>
       </header>
 
+      <!-- MAIN -->
       <main class="tablet-main">
-        <!-- LOGIN -->
+
+        <!-- LOGIN SCREEN -->
         <div id="screen-login" class="screen active">
           <h2>Fraktions-Login</h2>
-          <p class="subtitle">Wähle deine Dienststelle, um das MPU-System zu öffnen.</p>
+          <p class="subtitle">Wähle deine Dienststelle.</p>
 
           <div class="login-grid">
+
+            <!-- Landesgericht -->
             <button class="login-card court" onclick="loginAs('court')">
               <div class="login-icon">
                 <img src="Landesgericht_adler.png" alt="Landesgericht Falkenheim">
               </div>
               <div class="login-text">
                 <span class="login-title">Landesgericht Falkenheim</span>
-                <span class="login-desc">MPU anordnen, Akten prüfen, Entscheidungen treffen</span>
+                <span class="login-desc">MPU anordnen & Akten prüfen</span>
               </div>
             </button>
 
+            <!-- Klinik -->
             <button class="login-card clinic" onclick="loginAs('clinic')">
               <div class="login-icon">
                 <img src="rkflogo.png" alt="RKF / Uniklinikum">
               </div>
               <div class="login-text">
                 <span class="login-title">RKF / Uniklinikum</span>
-                <span class="login-desc">Medizinisch-psychologische Untersuchung durchführen</span>
+                <span class="login-desc">MPU durchführen & auswerten</span>
               </div>
             </button>
 
+            <!-- Pannendienst -->
             <button class="login-card roadside" onclick="loginAs('roadside')">
               <div class="login-icon">
                 <div class="roadside-icon-circle">P</div>
               </div>
               <div class="login-text">
                 <span class="login-title">Pannendienst Falkenheim</span>
-                <span class="login-desc">Fahrprüfung & Verkehrskompetenz testen</span>
+                <span class="login-desc">Fahrprüfung & Verkehrstest</span>
               </div>
             </button>
+
           </div>
+        </div>
+
+        <!-- AUTH SCREEN -->
+        <div id="screen-auth" class="screen">
+          <h2>Login</h2>
+          <p class="subtitle">Bitte Passwort eingeben.</p>
+
+          <form onsubmit="submitLogin(event)" class="card">
+            <label>Benutzername
+              <input type="text" id="authUser" readonly>
+            </label>
+
+            <label>Passwort
+              <input type="password" id="authPass" placeholder="Test1234" required>
+            </label>
+
+            <button type="submit" class="primary full-width">Login</button>
+          </form>
+
+          <button class="secondary full-width" onclick="showScreen('screen-login')">Zurück</button>
         </div>
 
         <!-- COURT MENU -->
         <div id="screen-court-menu" class="screen">
           <h2>Landesgericht – Übersicht</h2>
-          <p class="subtitle">MPU-Verwaltung, Aktenstatus und Fristen im Blick.</p>
+          <p class="subtitle">MPU-Verwaltung & Aktenstatus.</p>
+
           <div class="button-group">
             <button onclick="showCourtNewMpuForm()">Neue MPU verhängen</button>
             <button onclick="showCourtOpenCases()">Offene Anträge</button>
             <button onclick="showCourtClosedCases()">Abgeschlossene Akten</button>
-            <button class="ghost" onclick="showNotifications()">Erinnerungen & Fristen</button>
+            <button class="ghost" onclick="showNotifications()">Erinnerungen</button>
           </div>
+
           <button class="secondary full-width" onclick="logout()">Logout</button>
         </div>
 
         <!-- COURT NEW MPU -->
         <div id="screen-court-new-mpu" class="screen">
           <h2>Neue MPU verhängen</h2>
-          <p class="subtitle">Offizielles Bundesfalken-Formular (Simulation).</p>
+          <p class="subtitle">Offizielles Bundesfalken-Formular.</p>
+
           <form onsubmit="createNewMpu(event)" class="card">
             <div class="form-row">
               <label>Vorname
@@ -87,27 +120,31 @@
                 <input type="text" id="mpuLastName" required>
               </label>
             </div>
+
             <label>Aktenzeichen
               <input type="text" id="mpuFileNumber" required>
             </label>
-            <label>Begründung (Bundesfalken Formular)
+
+            <label>Begründung
               <textarea id="mpuReason" required></textarea>
             </label>
+
             <label>Medizinische Stelle
               <select id="mpuTarget">
                 <option value="clinic">Uniklinikum</option>
                 <option value="clinic">RKF</option>
               </select>
             </label>
-            <button type="submit" class="primary full-width">MPU an Klinik senden</button>
+
+            <button type="submit" class="primary full-width">MPU senden</button>
           </form>
+
           <button class="secondary full-width" onclick="backToCourtMenu()">Zurück</button>
         </div>
 
         <!-- COURT OPEN CASES -->
         <div id="screen-court-open-cases" class="screen">
           <h2>Offene Anträge</h2>
-          <p class="subtitle">Alle laufenden MPU-Verfahren.</p>
           <ul id="courtOpenList" class="case-list"></ul>
           <button class="secondary full-width" onclick="backToCourtMenu()">Zurück</button>
         </div>
@@ -115,7 +152,6 @@
         <!-- COURT CLOSED CASES -->
         <div id="screen-court-closed-cases" class="screen">
           <h2>Abgeschlossene Akten</h2>
-          <p class="subtitle">Vollständig bearbeitete MPU-Verfahren.</p>
           <ul id="courtClosedList" class="case-list"></ul>
           <button class="secondary full-width" onclick="backToCourtMenu()">Zurück</button>
         </div>
@@ -131,11 +167,13 @@
         <!-- CLINIC MENU -->
         <div id="screen-clinic-menu" class="screen">
           <h2>RKF / Uniklinikum</h2>
-          <p class="subtitle">MPU-Fälle sichten und Untersuchungen durchführen.</p>
+          <p class="subtitle">MPU-Fälle verwalten.</p>
+
           <div class="button-group">
             <button onclick="showClinicOpenMpus()">Offene MPU</button>
             <button onclick="showClinicClosedMpus()">Abgeschlossene MPU</button>
           </div>
+
           <button class="secondary full-width" onclick="logout()">Logout</button>
         </div>
 
@@ -163,7 +201,7 @@
 
         <!-- CLINIC EXAM -->
         <div id="screen-clinic-exam" class="screen">
-          <h2>Medizinisch-Psychologische Untersuchung</h2>
+          <h2>MPU-Untersuchung</h2>
           <div class="card">
             <div id="clinicExamQuestion" class="exam-question"></div>
             <div id="clinicExamControls" class="button-group"></div>
@@ -174,11 +212,13 @@
         <!-- ROADSIDE MENU -->
         <div id="screen-roadside-menu" class="screen">
           <h2>Pannendienst</h2>
-          <p class="subtitle">Fahrprüfungen und Verkehrskompetenz.</p>
+          <p class="subtitle">Fahrprüfungen verwalten.</p>
+
           <div class="button-group">
             <button onclick="showRoadsideOpenTests()">Offene Fahrprüfungen</button>
             <button onclick="showRoadsideClosedTests()">Abgeschlossene Fahrprüfungen</button>
           </div>
+
           <button class="secondary full-width" onclick="logout()">Logout</button>
         </div>
 
@@ -213,6 +253,7 @@
           </div>
           <button class="secondary full-width" onclick="backToCourtMenu()">Zurück</button>
         </div>
+
       </main>
     </div>
   </div>
